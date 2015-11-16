@@ -1,9 +1,9 @@
 module Utils where
 import Data.List (foldl', sort, (\\))
 
+count _ [] = 0
 count p (x:xs) | p x = 1 + count p xs
                | otherwise = count p xs
-count p _ = 0
 
 argmax :: (Ord b) => (a -> b) -> [a] -> (a,b)
 argmax func (t:ts) = foldl' f (t, func t) ts
