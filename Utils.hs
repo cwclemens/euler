@@ -1,4 +1,6 @@
--- utility
+module Utils where
+import Data.List (foldl', sort, (\\))
+
 count p (x:xs) | p x = 1 + count p xs
                | otherwise = count p xs
 count p _ = 0
