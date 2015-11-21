@@ -1,6 +1,11 @@
 module Utils where
 import Data.List (foldl', sort, (\\))
 
+untilM p x f | p x = x
+             | otherwise = do
+                 x' <- f x
+                 untilM p x' f
+
 count _ [] = 0
 count p (x:xs) | p x = 1 + count p xs
                | otherwise = count p xs
@@ -8,6 +13,11 @@ count p (x:xs) | p x = 1 + count p xs
 argmax :: (Ord b) => (a -> b) -> [a] -> (a,b)
 argmax func (t:ts) = foldl' f (t, func t) ts
   where f (x,fx) y | fy <- func y, fy > fx = (y,fy)
+                   | otherwise = (x,fx)
+
+argmin :: (Ord b) => (a -> b) -> [a] -> (a,b)
+argmin func (t:ts) = foldl' f (t, func t) ts
+  where f (x,fx) y | fy <- func y, fy < fx = (y,fy)
                    | otherwise = (x,fx)
 
 factorial n = product [1..n]
