@@ -67,3 +67,6 @@ argmin :: (Ord b) => (a -> b) -> [a] -> (a,b)
 argmin f xs = foldl1' (minBy snd) ys
   where ys = zip xs (map f xs)
         minBy p x y = if p x < p y then x else y
+
+dispGrid g = mapM_ print $ map (row g) [0..8]
+

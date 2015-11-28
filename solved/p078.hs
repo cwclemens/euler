@@ -22,9 +22,8 @@ mq' n m = do
        Just t -> return t
        Nothing -> do
          xs <- sequence [mq' n' (min n' g) | g <- [1..m], let n' = n-g]
-         let x = sum xs `rem` 1000000
-         qm' <- get
-         put $ M.insert (n,m) x qm'
+         let x = sum xs `mod` 1000000
+         modify $ M.insert (n,m) x
          return x
                
 qm0 = M.fromList [((0,0),1),((1,1),1)]
@@ -39,24 +38,25 @@ pairs (x:xs) (y:ys) = x : y : pairs xs ys
 pents n = takeWhile (\i->n>=i) . map pent $ pairs [1..] [-1,-2..]
 signs = cycle [1,1,-1,-1]
 
+type PMap = M.Map Int Int
+
 pm0 = M.fromList [(0,1),(1,1)]
-pp' :: Integer -> State (M.Map Integer Integer) Integer
+pp' :: Int -> State PMap Int
 pp' n = do
     pm <- get
     case M.lookup n pm of
       Just t -> return t
       Nothing -> do
         xs <- sequence [pp' (n-i) | i <- pents n]
-        let x = sum $ (zipWith (*) signs xs)
-        pm' <- get
-        put $ M.insert n x pm'
+        let x = (`mod` 1000000).sum $ zipWith (*) signs xs
+        modify $ M.insert n x
         return x
 pps = fst $ runState (sequence $ map pp' [1..]) pm0
 
 -- main
 
 main = mapM_ print .
-       takeWhile ((/=0).(`rem` 1000000).snd)
+       takeWhile ((/=0).snd)
        $ zip [1..] pps
  --55374        
 

@@ -1,4 +1,5 @@
-module Prime (primes,primesTo,factors,facMult,countDivisors,divisors,isPrime) where
+module Prime (primes,primesTo,factors,facMult,countDivisors,
+              distinctFactors,divisors,isPrime) where
 import Data.List
 
 -- infinite list of primes using sieve of eratosthenes
@@ -14,6 +15,8 @@ factors n | null xs = [n]
           | otherwise = x : factors (div n x)
         where xs@ ~(x:_) = [y | y <- (primesTo imax), rem n y == 0]
               imax = floor . sqrt $ fromIntegral n
+
+distinctFactors = nub . factors
 
 facMult = foldr f [] . factors
         where f p [] = [(p,1)]
